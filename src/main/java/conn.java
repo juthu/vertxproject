@@ -1,4 +1,5 @@
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.http.HttpServer;
 
 /**
  * Created by sirena on 2015-12-11.
@@ -6,9 +7,21 @@ import io.vertx.core.AbstractVerticle;
     public class conn extends AbstractVerticle {
     @Override
     public void start() throws Exception {
-        vertx.createHttpServer().websocketHandler(ws -> ws.handler(ws::writeBinaryMessage)).requestHandler(req -> {
-            if (req.uri().equals("/")) req.response().sendFile("ws.html");
+        HttpServer server = vertx.createHttpServer();
+        server.websocketHandler(websocket -> {
+            System.out.println("Connected!");
+            websocket.frameHandler(frame -> {
+                System.out.println("Received a frame of size!");
+            });
         }).listen(5432);
+      /*  vertx.createHttpServer().requestHandler(req -> {
+            req.response().putHeader("content-type", "text/html").end("<html><body><h1>Hello from vert.x!</h1></body></html>");
+        }).listen(5423);*/
+        /*
+        HttpServer server = vertx.createHttpServer();
+        vertx.createHttpServer().requestHandler(request -> {
+            request.response().end("Hello world");
+        }).listen(5423);*/
         /*server.websocketHandler(websocket -> {
             System.out.println("Connected!");
         });
